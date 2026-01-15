@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="The-Files-Hub-gantt" company="" webLink="" view-date="2025-12-18" view-index="0" gantt-divider-location="351" resource-divider-location="300" version="3.3.3300" locale="fr_CH">
+    <description/>
+    <view zooming-state="default:2" id="gantt-chart">
+        <field id="tpd3" name="Name" width="200" order="0"/>
+        <field id="tpd4" name="Begin date" width="75" order="1"/>
+        <field id="tpd5" name="End date" width="75" order="2"/>
+        <field id="tpd15" name="Notes" width="20" order="3"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Name" width="210" order="0"/>
+        <field id="1" name="Default role" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="1" tue="1" wed="1" thu="0" fri="1" sat="1"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" uid="657085dd59954ca8ac8e78c1a91b8368" name="Base de donnee" meeting="false" start="2026-01-15" duration="2" complete="0" expand="true">
+            <depend id="1" type="2" difference="0" hardness="Strong"/>
+            <depend id="11" type="2" difference="0" hardness="Strong"/>
+            <task id="7" uid="23f4834bcb204f3b9df61eb4b47c82f5" name="Tables" meeting="false" start="2026-01-15" duration="2" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true">
+                <task id="8" uid="a2bf43d3f1314013b532ca473c93f62e" name="Users" meeting="false" start="2026-01-15" duration="1" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true">
+                    <depend id="2" type="2" difference="0" hardness="Strong"/>
+                    <depend id="3" type="2" difference="0" hardness="Strong"/>
+                    <depend id="9" type="2" difference="0" hardness="Strong"/>
+                </task>
+                <task id="9" uid="c5ddededfe304d9d83e7e08d42b6c4b9" name="Posts" meeting="false" start="2026-01-22" duration="1" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true">
+                    <depend id="4" type="2" difference="0" hardness="Strong"/>
+                    <depend id="5" type="2" difference="0" hardness="Strong"/>
+                    <depend id="6" type="2" difference="0" hardness="Strong"/>
+                </task>
+            </task>
+        </task>
+        <task id="1" uid="ca489cb5dd5f453e8577040a3543ed20" name="Création du site" meeting="false" start="2026-01-29" duration="4" complete="0" thirdDate="2026-01-22" thirdDate-constraint="0" expand="true">
+            <depend id="11" type="2" difference="0" hardness="Strong"/>
+            <task id="2" uid="f4370a898c604385a03a17d76fe08b2a" name="Connexion" meeting="false" start="2026-02-05" duration="1" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true">
+                <depend id="4" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="3" uid="f84deab64da54a63b935df1d6a8ae72a" name="Enregistrement" meeting="false" start="2026-01-29" duration="1" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true">
+                <depend id="2" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="4" uid="0345f3a558264009922919c9ea2fa6c3" name="Accueil" meeting="false" start="2026-02-12" duration="1" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true">
+                <depend id="5" type="2" difference="0" hardness="Strong"/>
+                <depend id="6" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="5" uid="46e6ac62e7fb4cdba0a2ec2d3c9531db" name="Liste complete" meeting="false" start="2026-02-19" duration="1" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true"/>
+            <task id="6" uid="307b50992a384df2aadac6e8e9bb2dd0" name="Page individuelle" meeting="false" start="2026-02-19" duration="1" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="11" uid="42174b75f9c74d5ca6ab154fc1845ae8" name="Testes" meeting="false" start="2026-02-26" duration="1" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true">
+            <task id="12" uid="98442cd1a3fe427486898b6ca4c05f75" name="Publier post" meeting="false" start="2026-02-26" duration="1" complete="0" expand="true"/>
+            <task id="13" uid="ce45f3c9256f407bab04974fc8aba93a" name="Modifier post" meeting="false" start="2026-02-26" duration="1" complete="0" expand="true"/>
+            <task id="14" uid="deed099d0c60418ba05095e90d695cb2" name="Supprimer post" meeting="false" start="2026-02-26" duration="1" complete="0" expand="true"/>
+            <task id="15" uid="80c4c4afa2ca41d899af9f6d1a44cdaf" name="Créer compte" meeting="false" start="2026-02-26" duration="1" complete="0" expand="true"/>
+            <task id="16" uid="aed3d425aad2419e97580babb54ddb88" name="Supprimer compte" meeting="false" start="2026-02-26" duration="1" complete="0" expand="true"/>
+            <task id="17" uid="e0702d42a2a343c681a4ff0b15d8104b" name="Droit admin" meeting="false" start="2026-02-26" duration="1" complete="0" expand="true"/>
+            <task id="18" uid="da948990adb84073bed0bc8921d0c1bb" name="Droits opérateurs" meeting="false" start="2026-02-26" duration="1" complete="0" expand="true"/>
+        </task>
+        <task id="19" uid="aba6792ffc5d487e9caef84f7bcd2f21" name="Documetation" meeting="false" start="2026-01-15" duration="7" complete="0" thirdDate="2026-01-15" thirdDate-constraint="0" expand="true"/>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>
