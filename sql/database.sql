@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:3306
--- Généré le : jeu. 15 jan. 2026 à 10:37
+-- Généré le : jeu. 22 jan. 2026 à 07:36
 -- Version du serveur : 10.11.13-MariaDB-0ubuntu0.24.04.1
--- Version de PHP : 8.4.14
+-- Version de PHP : 8.4.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -21,6 +21,36 @@ SET time_zone = "+00:00";
 -- Base de données : `file_hub`
 --
 
+DROP DATABASE IF EXISTS file_hub;
+CREATE DATABASE file_hub;
+USE file_hub;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Posts`
+--
+
+CREATE TABLE `Posts` (
+  `idPost` int(11) UNSIGNED NOT NULL,
+  `idCreator` int(11) UNSIGNED NOT NULL,
+  `fileLink` text NOT NULL,
+  `createDate` date NOT NULL,
+  `description` longtext NOT NULL,
+  `likes` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `PostsUsers`
+--
+
+CREATE TABLE `PostsUsers` (
+  `idPosts` int(10) UNSIGNED NOT NULL,
+  `idUser` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -31,16 +61,30 @@ CREATE TABLE `Users` (
   `idUser` int(10) UNSIGNED NOT NULL,
   `firstName` varchar(100) NOT NULL,
   `lastName` varchar(100) NOT NULL,
-  `username` varchar(100) NOT NULL,
+  `userName` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(256) NOT NULL,
-  `level` int(11) NOT NULL,
-  `pfp` text NOT NULL
+  `level` int(11) NULL DEFAULT 0,
+  `profilePicture` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Index pour les tables déchargées
 --
+
+--
+-- Index pour la table `Posts`
+--
+ALTER TABLE `Posts`
+  ADD PRIMARY KEY (`idPost`),
+  ADD KEY `idCreator` (`idCreator`);
+
+--
+-- Index pour la table `PostsUsers`
+--
+ALTER TABLE `PostsUsers`
+  ADD KEY `idPosts` (`idPosts`,`idUser`),
+  ADD KEY `idUser` (`idUser`);
 
 --
 -- Index pour la table `Users`
@@ -55,10 +99,33 @@ ALTER TABLE `Users`
 --
 
 --
+-- AUTO_INCREMENT pour la table `Posts`
+--
+ALTER TABLE `Posts`
+  MODIFY `idPost` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `Users`
 --
 ALTER TABLE `Users`
   MODIFY `idUser` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `Posts`
+--
+ALTER TABLE `Posts`
+  ADD CONSTRAINT `Posts_ibfk_1` FOREIGN KEY (`idCreator`) REFERENCES `Users` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Contraintes pour la table `PostsUsers`
+--
+ALTER TABLE `PostsUsers`
+  ADD CONSTRAINT `PostsUsers_ibfk_1` FOREIGN KEY (`idPosts`) REFERENCES `Posts` (`idPost`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `PostsUsers_ibfk_2` FOREIGN KEY (`idUser`) REFERENCES `Users` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
