@@ -16,3 +16,6 @@ $app->get('/register', [LoginController::class, 'showRegister']);
 $app->post('/register', [LoginController::class, 'register']);
 
 $app->get('/logout', [LoginController::class, 'logout']);
+
+// Secret route
+$app->get('/secret', [HomeController::class, 'secret']);

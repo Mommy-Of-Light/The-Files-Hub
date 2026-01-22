@@ -134,7 +134,7 @@ class LoginController extends BaseController
         UserService::disconnect();
 
         return $response
-            ->withHeader('Location', '/')
+            ->withHeader('Location', '/login')
             ->withStatus(302);
     }
 }

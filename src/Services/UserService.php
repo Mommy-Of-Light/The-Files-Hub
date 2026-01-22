@@ -61,4 +61,19 @@ class UserService
     {
         return User::All();
     }
+
+    public static function unAuthorized(\Psr\Http\Message\ResponseInterface $response, \Psr\Http\Message\ServerRequestInterface $request, \Slim\Views\PhpRenderer $view): \Psr\Http\Message\ResponseInterface
+    {
+        $view->setLayout('layout.php');
+
+        return $view->render(
+            $response->withStatus(401),
+            'errors/401.php',
+            [
+                'withMenu' => false,
+                'title' => 'Unauthorized',
+                'message' => 'You must be logged in to access this page.'
+            ]
+        );
+    }
 }

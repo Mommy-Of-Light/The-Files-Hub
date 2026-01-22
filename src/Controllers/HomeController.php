@@ -21,11 +21,8 @@ class HomeController extends BaseController
     public function index(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
-            return $response
-                ->withHeader('Location', '/login')
-                ->withStatus(302);
+            return UserService::unAuthorized($response, $request, $this->view);
         }
-
         return $this->view->render($response, 'home/home.php', [
             'title' => 'TheFileHub | Home',
         ]);
@@ -34,9 +31,7 @@ class HomeController extends BaseController
     public function profile(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
-            return $response
-                ->withHeader('Location', '/login')
-                ->withStatus(302);
+            return UserService::unAuthorized($response, $request, $this->view);
         }
 
         return $this->view->render($response, 'home/profile.php', [
@@ -48,9 +43,7 @@ class HomeController extends BaseController
     public function updateProfilePicture(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
-            return $response
-                ->withHeader('Location', '/login')
-                ->withStatus(302);
+            return UserService::unAuthorized($response, $request, $this->view);
         }
 
         $uploadedFile = $request->getUploadedFiles()['pfp'] ?? null;
@@ -115,9 +108,7 @@ class HomeController extends BaseController
     public function deleteAccount(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
-            return $response
-                ->withHeader('Location', '/login')
-                ->withStatus(302);
+            return UserService::unAuthorized($response, $request, $this->view);
         }
 
         $user = UserService::current();
@@ -126,5 +117,13 @@ class HomeController extends BaseController
         UserService::disconnect();
 
         return $response->withHeader('Location', '/profile')->withStatus(302);
+    }
+
+    public function secret(Request $request, Response $response): Response
+    {
+        return $this->view->render($response, 'errors/418.php', [
+            'title' => 'TheFileHub | Secret',
+            'withMenu' => false,
+        ]);
     }
 }

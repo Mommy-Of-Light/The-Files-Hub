@@ -21,26 +21,24 @@ $errorMiddleware->setErrorHandler(
         $view = new PhpRenderer(__DIR__ . '/../views');
         $view->setLayout("layout.php");
         return $view->render($response->withStatus(404), 'errors/404.php', [
-            'withMenu' => true,
+            'withMenu' => false,
             'title' => 'Page non trouvée',
             'message' => $exception->getMessage(),
         ]);
     }
 );
 
-$errorMiddleware->setErrorHandler(
-    HttpInternalServerErrorException::class,
-    function ($request, $exception, $displayErrorDetails) {
-        $response = new \Slim\Psr7\Response();
-        $view = new PhpRenderer(__DIR__ . '/../views');
-        $view->setLayout("layout.php");
-        return $view->render($response->withStatus(500), 'errors/500.php', [
-            'withMenu' => false,
-            'title' => 'Erreur interne du serveur',
-            'message' => $exception->getMessage(),
-        ]);
-    }
-);
+$errorMiddleware->setDefaultErrorHandler(function ($request, $exception, $displayErrorDetails) {
+    $response = new \Slim\Psr7\Response();
+    $view = new PhpRenderer(__DIR__ . '/../views');
+    $view->setLayout("layout.php");
+
+    return $view->render($response->withStatus(500), 'errors/500.php', [
+        'withMenu' => false,
+        'title' => 'Erreur interne du serveur',
+        'message' => $displayErrorDetails ? $exception->getMessage() : 'Une erreur est survenue',
+    ]);
+});
 
 require __DIR__ . '/../routes/web.php';
 
