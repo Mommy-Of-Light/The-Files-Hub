@@ -30,8 +30,8 @@ class User extends AbstractModel
         set => $this->lastName = $value;
     }
 
-    public ?string $username = null {
-        set => $this->username = $value;
+    public ?string $userName = null {
+        set => $this->userName = $value;
     }
 
     public ?string $email = null {
@@ -46,9 +46,7 @@ class User extends AbstractModel
         set => $this->profilePicture = $value;
     }
 
-    protected array $casts = [
-        'idUser' => 'int',
-    ];
+    protected array $casts = [];
 
     public function getIdUser(): int
     {
@@ -67,7 +65,7 @@ class User extends AbstractModel
 
     public function getUsername(): string
     {
-        return $this->username;
+        return $this->userName;
     }
 
     public function getEmail(): string
@@ -85,7 +83,8 @@ class User extends AbstractModel
         return $this->profilePicture;
     }
 
-    public static function All(): array{
+    public static function All(): array
+    {
         $db = Database::connection();
 
         $query = "SELECT * FROM Users";
@@ -97,10 +96,9 @@ class User extends AbstractModel
         if ($stmt->rowCount() > 0) {
             foreach ($stmt->fetchAll() as $row) {
                 $users[] = new self()->fill([
-                    'idUser' => $row['idUser'],
                     'firstName' => $row['firstName'],
                     'lastName' => $row['lastName'],
-                    'username' => $row['username'],
+                    'userName' => $row['userName'],
                     'email' => $row['email'],
                     'password' => $row['password'],
                     'profilePicture' => $row['profilePicture']
@@ -111,7 +109,8 @@ class User extends AbstractModel
         return $users ?? [];
     }
 
-    public static function findById(int $idUser): User|null{
+    public static function findById(int $idUser): User|null
+    {
         $db = Database::connection();
 
         $query = "SELECT * FROM Users WHERE idUser = :idUser";
@@ -122,48 +121,30 @@ class User extends AbstractModel
 
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            return new self()->fill([
-                'firstName' => $user[0]["firstName"],
-                'lastName' => $user[0]["lastName"],
-                'username' => $user[0]["userName"],
-                'email' => $user[0]["email"],
-                'password' => $user[0]["password"],
-                'profilePicture' => $user[0]["profilePicture"]
-            ]);
-        }
+        $row = $stmt->fetch();
 
-        return null;
+        return $row ? new self()->fill($row) : null;
     }
 
-    public static function findByUsername(string $username): User|null{
+    public static function findByUsername(string $userName): User|null
+    {
         $db = Database::connection();
 
-        $query = "SELECT * FROM Users WHERE username = :username";
+        $query = "SELECT * FROM Users WHERE userName = :userName";
 
         $stmt = $db->prepare($query);
 
-        $stmt->bindValue(':username', $username);
+        $stmt->bindValue(':userName', $userName);
 
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            return new self()->fill([
-                'firstName' => $user[0]["firstName"],
-                'lastName' => $user[0]["lastName"],
-                'username' => $user[0]["userName"],
-                'email' => $user[0]["email"],
-                'password' => $user[0]["password"],
-                'profilePicture' => $user[0]["profilePicture"]
-            ]);
-        }
+        $row = $stmt->fetch();
 
-        return null;
+        return $row ? new self()->fill($row) : null;
     }
 
-    public static function findByEmail(string $email): User|null{
+    public static function findByEmail(string $email): User|null
+    {
         $db = Database::connection();
 
         $query = "SELECT * FROM Users WHERE email = :email";
@@ -174,31 +155,22 @@ class User extends AbstractModel
 
         $stmt->execute();
 
-        if ($stmt->rowCount() > 0) {
-            $user = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-            return new self()->fill([
-                'firstName' => $user[0]["firstName"],
-                'lastName' => $user[0]["lastName"],
-                'username' => $user[0]["userName"],
-                'email' => $user[0]["email"],
-                'password' => $user[0]["password"],
-                'profilePicture' => $user[0]["profilePicture"]
-            ]);
-        }
+        $row = $stmt->fetch();
 
-        return null;
+        return $row ? new self()->fill($row) : null;
     }
 
-    public function insert(): bool{
+    public function insert(): bool
+    {
         $db = Database::connection();
 
-        $query = "INSERT INTO Users (firstName, lastName, username, email, password, profilePicture) VALUES (:firstName, :lastName, :username, :email, :password, :profilePicture)";
+        $query = "INSERT INTO Users (firstName, lastName, userName, email, password, profilePicture) VALUES (:firstName, :lastName, :userName, :email, :password, :profilePicture)";
 
         $stmt = $db->prepare($query);
 
         $stmt->bindValue(':firstName', $this->firstName);
         $stmt->bindValue(':lastName', $this->lastName);
-        $stmt->bindValue(':username', $this->username);
+        $stmt->bindValue(':userName', $this->userName);
         $stmt->bindValue(':email', $this->email);
         $stmt->bindValue(':password', $this->password);
         $stmt->bindValue(':profilePicture', $this->profilePicture);
@@ -206,22 +178,23 @@ class User extends AbstractModel
         $success = $stmt->execute();
 
         if ($success) {
-            $this->userId = (int)Database::connection()->lastInsertId();
+            $this->userId = (int) Database::connection()->lastInsertId();
         }
 
         return $success;
     }
 
-    public function update(): bool{
+    public function update(): bool
+    {
         $db = Database::connection();
 
-        $query = "UPDATE Users SET firstName = :firstName, lastName = :lastName, username = :username, email = :email, password = :password, profilePicture = :profilePicture WHERE idUser = :idUser";
+        $query = "UPDATE Users SET firstName = :firstName, lastName = :lastName, userName = :userName, email = :email, password = :password, profilePicture = :profilePicture WHERE idUser = :idUser";
 
         $stmt = $db->prepare($query);
 
         $stmt->bindValue(':firstName', $this->firstName);
         $stmt->bindValue(':lastName', $this->lastName);
-        $stmt->bindValue(':username', $this->username);
+        $stmt->bindValue(':userName', $this->userName);
         $stmt->bindValue(':email', $this->email);
         $stmt->bindValue(':password', $this->password);
         $stmt->bindValue(':profilePicture', $this->profilePicture);
@@ -229,14 +202,11 @@ class User extends AbstractModel
 
         $success = $stmt->execute();
 
-        if ($success) {
-            $this->userId = (int)Database::connection()->lastInsertId();
-        }
-
         return $success;
     }
 
-    public function delete(): bool{
+    public function delete(): bool
+    {
         $db = Database::connection();
 
         $query = "DELETE FROM Users WHERE idUser = :idUser";

@@ -13,7 +13,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-light"
-                            href="/profile"><?= htmlspecialchars($_SESSION['user']->username) ?></a>
+                            href="/profile"><?= htmlspecialchars($_SESSION['user']->userName) ?></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-light" href="/logout">Logout</a>

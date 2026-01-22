@@ -5,7 +5,6 @@
             <div class="card bg-dark border-secondary text-light shadow">
                 <div class="card-body text-center">
 
-                    <!-- Flash messages -->
                     <?php if (!empty($_SESSION['error'])): ?>
                         <div class="alert alert-danger">
                             <?= htmlspecialchars($_SESSION['error']) ?>
@@ -20,10 +19,9 @@
                         <?php unset($_SESSION['success']); ?>
                     <?php endif; ?>
 
-                    <!-- Profile Picture -->
                     <img
                         src="<?= $user->profilePicture
-                            ? htmlspecialchars($user->profilePicture)
+                            ? '/assets/pfp/' . htmlspecialchars($user->profilePicture)
                             : '/assets/pfp/default.png'
                         ?>"
                         alt="Profile Picture"
@@ -33,20 +31,18 @@
                         style="object-fit: cover;"
                     >
 
-                    <h3 class="mb-0"><?= htmlspecialchars($user->username) ?></h3>
+                    <h3 class="mb-0"><?= htmlspecialchars($user->userName) ?></h3>
 
                     <hr class="border-secondary">
 
-                    <!-- User Info -->
                     <div class="text-start mb-4">
                         <p><strong>Full Name:</strong>
                             <?= htmlspecialchars($user->firstName . ' ' . $user->lastName) ?>
                         </p>
                         <p><strong>Email:</strong> <?= htmlspecialchars($user->email) ?></p>
-                        <p><strong>Username:</strong> <?= htmlspecialchars($user->username) ?></p>
+                        <p><strong>Username:</strong> <?= htmlspecialchars($user->userName) ?></p>
                     </div>
 
-                    <!-- Update Profile Picture -->
                     <form
                         method="post"
                         action="/profile/update-pfp"
@@ -74,7 +70,6 @@
 
                     <hr class="border-secondary">
 
-                    <!-- Delete Account -->
                     <form
                         method="post"
                         action="/profile/delete"

@@ -86,7 +86,7 @@ class HomeController extends BaseController
 
         $directory = __DIR__ . '/../../public/assets/pfp';
 
-        foreach (glob($directory . '/' . $user->username . '_pfp.*') as $file) {
+        foreach (glob($directory . '/' . $user->userName . '_pfp.*') as $file) {
             if (is_file($file)) {
                 unlink($file);
             }
@@ -97,7 +97,7 @@ class HomeController extends BaseController
             PATHINFO_EXTENSION
         ));
 
-        $filename = sprintf('%s_pfp.%s', $user->username, $extension);
+        $filename = sprintf('%s_pfp.%s', $user->userName, $extension);
 
         $uploadedFile->moveTo($directory . '/' . $filename);
 
