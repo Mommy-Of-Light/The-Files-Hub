@@ -1,10 +1,8 @@
 <?php
-date_default_timezone_set('Europe/Paris');
 
 use Slim\Factory\AppFactory;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Views\PhpRenderer;
-use Slim\Exception\HttpInternalServerErrorException;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -15,7 +13,7 @@ $app = AppFactory::create();
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 $errorMiddleware->setErrorHandler(
-    HttpNotFoundException::class,
+    Slim\Exception\HttpNotFoundException::class,
     function ($request, $exception, $displayErrorDetails) {
         $response = new \Slim\Psr7\Response();
         $view = new PhpRenderer(__DIR__ . '/../views');
@@ -28,17 +26,33 @@ $errorMiddleware->setErrorHandler(
     }
 );
 
-$errorMiddleware->setDefaultErrorHandler(function ($request, $exception, $displayErrorDetails) {
-    $response = new \Slim\Psr7\Response();
-    $view = new PhpRenderer(__DIR__ . '/../views');
-    $view->setLayout("layout.php");
+$errorMiddleware->setErrorHandler(
+    Slim\Exception\HttpInternalServerErrorException::class,
+    function ($request, $exception, $displayErrorDetails) {
+        $response = new \Slim\Psr7\Response();
+        $view = new PhpRenderer(__DIR__ . '/../views');
+        $view->setLayout("layout.php");
+        return $view->render($response->withStatus(500), 'errors/500.php', [
+            'withMenu' => false,
+            'title' => 'Erreur interne du serveur',
+            'message' => $exception->getMessage(),
+        ]);
+    }
+);
 
-    return $view->render($response->withStatus(500), 'errors/500.php', [
-        'withMenu' => false,
-        'title' => 'Erreur interne du serveur',
-        'message' => $displayErrorDetails ? $exception->getMessage() : 'Une erreur est survenue',
-    ]);
-});
+$errorMiddleware->setErrorHandler(
+    Slim\Exception\HttpInternalServerErrorException::class,
+    function ($request, $exception, $displayErrorDetails) {
+        $response = new \Slim\Psr7\Response();
+        $view = new PhpRenderer(__DIR__ . '/../views');
+        $view->setLayout("layout.php");
+        return $view->render($response->withStatus(500), 'errors/500.php', [
+            'withMenu' => false,
+            'title' => 'Erreur interne du serveur',
+            'message' => $exception->getMessage(),
+        ]);
+    }
+);
 
 require __DIR__ . '/../routes/web.php';
 
