@@ -108,8 +108,6 @@ class LoginController extends BaseController
             $profilePicture->moveTo(
                 __DIR__ . '/../../public/assets/pfp/' . $newFilename
             );
-
-            $profilePicturePath = '/assets/pfp/' . $newFilename;
         }
 
         // Create user
@@ -118,10 +116,10 @@ class LoginController extends BaseController
         User::create([
             'firstName' => $firstName,
             'lastName' => $lastName,
-            'username' => $username,
+            'userName' => $username,
             'email' => $email,
             'password' => $hashedPassword,
-            'profilePicture' => $profilePicturePath,
+            'profilePicture' => $newFilename,
         ]);
 
         return $response

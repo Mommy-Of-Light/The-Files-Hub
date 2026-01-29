@@ -178,7 +178,7 @@ class User extends AbstractModel
         $success = $stmt->execute();
 
         if ($success) {
-            $this->userId = (int) Database::connection()->lastInsertId();
+            $this->idUser = (int) Database::connection()->lastInsertId();
         }
 
         return $success;
