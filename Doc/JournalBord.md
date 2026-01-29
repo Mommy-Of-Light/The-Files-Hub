@@ -28,7 +28,7 @@ Ma tache d'aujourd'hui était de faire la base du site avec la connexion, l'enre
 
 ## 29.01.2026
 
-Nous allons faire le controlleur et addaptrer le model d'user pour que l'application soit multi-roles.
+Nous allons faire le controlleur et la page et addaptrer le model d'user pour que l'application soit multi-roles.
 
 ### Kevin:
 

@@ -34,9 +34,14 @@ class HomeController extends BaseController
             return UserService::unAuthorized($response, $request, $this->view);
         }
 
+        $user = UserService::current();
+
+        $nextLevelXpRequierd = (($user->level + 1) * 500);
+
         return $this->view->render($response, 'home/profile.php', [
             'title' => 'TheFileHub | Profile',
-            'user' => UserService::current(),
+            'user' => $user,
+            'nextLevelXpRequierd' => $nextLevelXpRequierd,
         ]);
     }
 

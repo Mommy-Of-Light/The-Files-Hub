@@ -46,7 +46,21 @@ class User extends AbstractModel
         set => $this->profilePicture = $value;
     }
 
+    public ?int $roles = null {
+        set => $this->roles = $value;
+    }
+
+    public ?int $level = null {
+        set => $this->level = $value;
+    }
+
+    public ?int $xp = null {
+        set => $this->xp = $value;
+    }
+
     protected array $casts = [];
+
+    #region Getters/Setters
 
     public function getIdUser(): int
     {
@@ -83,6 +97,47 @@ class User extends AbstractModel
         return $this->profilePicture;
     }
 
+    public function getRoles(): int
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(int $roles): void
+    {
+        $this->roles = $roles;
+    }
+
+    public function getRoleName(int $role): string
+    {
+        if ($role === 1) {
+            return 'admin';
+        }
+        if ($role === 2) {
+            return 'opperator';
+        }
+        if ($role === 3) {
+            return 'creator';
+        }
+        return 'user';
+    }
+
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    public function getXp(): int
+    {
+        return $this->xp;
+    }
+
+    public function setXp_Add(int $xp): void
+    {
+        $this->xp += $xp;
+    }
+
+    #endregion
+
     public static function All(): array
     {
         $db = Database::connection();
@@ -96,11 +151,15 @@ class User extends AbstractModel
         if ($stmt->rowCount() > 0) {
             foreach ($stmt->fetchAll() as $row) {
                 $users[] = new self()->fill([
+                    'idUser' => $row['idUser'],
                     'firstName' => $row['firstName'],
                     'lastName' => $row['lastName'],
                     'userName' => $row['userName'],
                     'email' => $row['email'],
                     'password' => $row['password'],
+                    'roles' => $row['roles'],
+                    'level' => $row['level'],
+                    'xp' => $row['xp'],
                     'profilePicture' => $row['profilePicture']
                 ]);
             }
@@ -164,7 +223,7 @@ class User extends AbstractModel
     {
         $db = Database::connection();
 
-        $query = "INSERT INTO Users (firstName, lastName, userName, email, password, profilePicture) VALUES (:firstName, :lastName, :userName, :email, :password, :profilePicture)";
+        $query = "INSERT INTO Users (firstName, lastName, userName, email, password, roles, level, xp, profilePicture) VALUES (:firstName, :lastName, :userName, :email, :password, :roles, :level, :xp, :profilePicture)";
 
         $stmt = $db->prepare($query);
 
@@ -173,6 +232,9 @@ class User extends AbstractModel
         $stmt->bindValue(':userName', $this->userName);
         $stmt->bindValue(':email', $this->email);
         $stmt->bindValue(':password', $this->password);
+        $stmt->bindValue(':roles', $this->roles);
+        $stmt->bindValue(':level', $this->level);
+        $stmt->bindValue(':xp', $this->xp);
         $stmt->bindValue(':profilePicture', $this->profilePicture);
 
         $success = $stmt->execute();
@@ -188,7 +250,7 @@ class User extends AbstractModel
     {
         $db = Database::connection();
 
-        $query = "UPDATE Users SET firstName = :firstName, lastName = :lastName, userName = :userName, email = :email, password = :password, profilePicture = :profilePicture WHERE idUser = :idUser";
+        $query = "UPDATE Users SET firstName = :firstName, lastName = :lastName, userName = :userName, email = :email, password = :password, roles = :roles, level = :level, xp = :xp, profilePicture = :profilePicture WHERE idUser = :idUser";
 
         $stmt = $db->prepare($query);
 
@@ -197,6 +259,9 @@ class User extends AbstractModel
         $stmt->bindValue(':userName', $this->userName);
         $stmt->bindValue(':email', $this->email);
         $stmt->bindValue(':password', $this->password);
+        $stmt->bindValue(':roles', $this->roles);
+        $stmt->bindValue(':level', $this->level);
+        $stmt->bindValue(':xp', $this->xp);
         $stmt->bindValue(':profilePicture', $this->profilePicture);
         $stmt->bindValue(':idUser', $this->idUser);
 

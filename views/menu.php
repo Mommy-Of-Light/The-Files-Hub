@@ -18,6 +18,11 @@
                         <a class="nav-link text-light"
                             href="/profile"><?= htmlspecialchars($_SESSION['user']->userName) ?></a>
                     </li>
+                    <?php if (in_array($_SESSION['user']->getRoleName($_SESSION['user']->getRoles()), ['admin', 'opperator'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="/mod/<?= htmlspecialchars($_SESSION['user']->getRoleName($_SESSION['user']->getRoles())) ?>-dashboard">Dashboard</a>
+                        </li>
+                    <?php endif; ?>
                     <li class="nav-item">
                         <a class="nav-link text-light" href="/logout">Logout</a>
                     </li>

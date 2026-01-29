@@ -128,7 +128,8 @@ ALTER TABLE `PostsUsers`
   ADD CONSTRAINT `PostsUsers_ibfk_2` FOREIGN KEY (`idUser`) REFERENCES `Users` (`idUser`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
-ALTER TABLE `Users` ADD `roles` INT(11) NULL DEFAULT '0' COMMENT '0: user\r\n1: admin\r\n2: opérateur' AFTER `password`;
+ALTER TABLE `Users` ADD `roles` INT(11) NULL DEFAULT '0' COMMENT '0: user\r\n1: admin\r\n2: opérateur\r\n 3: creator' AFTER `password`;
+ALTER TABLE `Users` ADD `xp` INT(11) NULL DEFAULT '0' AFTER `level`;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

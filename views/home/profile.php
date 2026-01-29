@@ -20,35 +20,49 @@
                     <?php endif; ?>
 
                     <img
-                        src="<?= $user->profilePicture
-                            ? '/assets/pfp/' . htmlspecialchars($user->profilePicture)
-                            : '/assets/pfp/default.png'
-                        ?>"
+                        src="<?= $user->getProfilePicture()
+                                    ? '/assets/pfp/' . htmlspecialchars($user->getProfilePicture())
+                                    : '/assets/pfp/default.png'
+                                ?>"
                         alt="Profile Picture"
                         class="rounded-circle mb-3"
                         width="120"
                         height="120"
-                        style="object-fit: cover;"
-                    >
+                        style="object-fit: cover;">
 
-                    <h3 class="mb-0"><?= htmlspecialchars($user->userName) ?></h3>
+                    <h3 class="mb-0"><?= htmlspecialchars($user->getUsername()) ?></h3>
+                    <div class="progress bg-secondary" style="height: 25px;">
+                        <div
+                            class="progress-bar"
+                            role="progressbar"
+                            style="width: <?= min(100, ($user->getXp() / $nextLevelXpRequierd) * 100) ?>%;"
+                            aria-valuenow="<?= min(100, ($user->getXp() / $nextLevelXpRequierd) * 100) ?>"
+                            aria-valuemin="0"
+                            aria-valuemax="100">
+                        </div>
+                        <span class="progress-bar-text position-absolute start-50 translate-middle-x text-light" style="font-size: 1rem !important;">
+                            Level <?= htmlspecialchars($user->getLevel()) ?> -
+                            <?= htmlspecialchars($user->getXp()) ?> /
+                            <?= htmlspecialchars($nextLevelXpRequierd) ?> XP
+                        </span>
+                    </div>
 
                     <hr class="border-secondary">
 
                     <div class="text-start mb-4">
                         <p><strong>Full Name:</strong>
-                            <?= htmlspecialchars($user->firstName . ' ' . $user->lastName) ?>
+                            <?= htmlspecialchars($user->getFirstName() . ' ' . $user->getLastName()) ?>
                         </p>
-                        <p><strong>Email:</strong> <?= htmlspecialchars($user->email) ?></p>
-                        <p><strong>Username:</strong> <?= htmlspecialchars($user->userName) ?></p>
+                        <p><strong>Email:</strong> <?= htmlspecialchars($user->getEmail()) ?></p>
+                        <p><strong>Username:</strong> <?= htmlspecialchars($user->getUsername()) ?></p>
+                        <p><strong>Roles:</strong> <?= htmlspecialchars($user->getRoleName()) ?></p>
                     </div>
 
                     <form
                         method="post"
                         action="/profile/update-pfp"
                         enctype="multipart/form-data"
-                        class="mb-4"
-                    >
+                        class="mb-4">
                         <div class="mb-3 text-start">
                             <label for="pfp" class="form-label">Update Profile Picture</label>
                             <input
@@ -57,8 +71,7 @@
                                 id="pfp"
                                 name="pfp"
                                 accept="image/*"
-                                required
-                            >
+                                required>
                         </div>
 
                         <div class="d-grid">
@@ -73,8 +86,7 @@
                     <form
                         method="post"
                         action="/profile/delete"
-                        onsubmit="return confirm('Are you sure? This action is irreversible.');"
-                    >
+                        onsubmit="return confirm('Are you sure? This action is irreversible.');">
                         <div class="d-grid">
                             <button type="submit" class="btn btn-danger">
                                 Delete Account

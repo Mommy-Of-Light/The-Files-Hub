@@ -119,6 +119,9 @@ class LoginController extends BaseController
             'userName' => $username,
             'email' => $email,
             'password' => $hashedPassword,
+            'roles' => 0,
+            'level' => 0,
+            'xp' => 0,
             'profilePicture' => $newFilename,
         ]);
 
