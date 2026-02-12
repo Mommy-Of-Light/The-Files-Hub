@@ -18,11 +18,17 @@
                         <a class="nav-link text-light"
                             href="/profile"><?= htmlspecialchars($_SESSION['user']->userName) ?></a>
                     </li>
-                    <?php if (in_array($_SESSION['user']->getRoleName($_SESSION['user']->getRoles()), ['admin', 'opperator'])): ?>
+                    <?php if (in_array($_SESSION['user']->getRoleName($_SESSION['user']->getRoles()), ['admin', 'opperator', 'creator'])): ?>
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="/mod/<?= htmlspecialchars($_SESSION['user']->getRoleName($_SESSION['user']->getRoles())) ?>-dashboard">Dashboard</a>
+                            <a class="nav-link text-light" href="/mod/<?= htmlspecialchars($_SESSION['user']->getRoleName($_SESSION['user']->getRoles() == 3 ? 2 : $_SESSION['user']->getRoles())) ?>-dashboard">Dashboard</a>
                         </li>
                     <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/posts">All Posts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="/post/new">New Post</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link text-light" href="/logout">Logout</a>
                     </li>

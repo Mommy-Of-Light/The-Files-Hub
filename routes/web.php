@@ -3,6 +3,7 @@
 use TheFileHub\Controllers\HomeController;
 use TheFileHub\Controllers\LoginController;
 use TheFileHub\Controllers\ModeratorController;
+use TheFileHub\Controllers\PostController;
 
 $app->get('/', [HomeController::class, 'index']);
 
@@ -25,6 +26,15 @@ $app->get('/mod/opperator-dashboard', [ModeratorController::class, 'opperatorDas
 $app->post('/mod/user/promote/{id}', [ModeratorController::class, 'promoteUser']);
 $app->post('/mod/user/demote/{id}', [ModeratorController::class, 'demoteUser']);
 $app->post('/mod/user/delete/{id}', [ModeratorController::class, 'deleteUser']);
+
+$app->get('/posts', callable: [PostController::class, 'all']);
+$app->get('/post/new', [PostController::class, 'new']);
+$app->post('/post/new', [PostController::class, 'submit']);
+// $app->get('/post/single/debbug', [PostController::class, 'single']);
+$app->get('/post/single/{id:\d+}', [PostController::class, 'single']);
+$app->post('/post/single/{id:\d+}/like', [PostController::class, 'singleLike']);
+$app->post('/post/single/{id:\d+}/update', [PostController::class, 'singleUpdate']);
+$app->post('/post/single/{id:\d+}/delete', [PostController::class, 'singleDelete']);
 
 // Secret route
 $app->get('/secret', [HomeController::class, 'secret']);
