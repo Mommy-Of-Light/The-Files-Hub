@@ -37,3 +37,26 @@ Aujourd'hui, ma tâche consistait à adapter la base de données aux différents
 ### Bastien:
 
 Ma tache est de faire la vue des pages des roles des utilisateurs (user/admin/ops).
+
+## 05.02.2026
+
+Aujourd'hui, nous allons nous occuper de la création des pages pour la création du posts, ainsi que pour les administrateurs et les opérateurs.
+
+### Kevin:
+
+Ma tâche aujourd'hui consistait à créer le modèle pour la table Posts et la view pour un fichier.
+
+### Bastien:
+
+Je suis occupé par le développement backend du site web pour les posts.
+
+## 12.02.2026
+
+
+
+### Kevin:
+
+
+
+### Bastien:
+
