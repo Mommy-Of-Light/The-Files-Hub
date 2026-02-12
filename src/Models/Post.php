@@ -110,11 +110,6 @@ class Post extends AbstractModel
         $this->fileExt = $fileExt;
     }
 
-    public function getCreatedAt(): string
-    {
-        return $this->createdAt;
-    }
-
     public static function All(): array
     {
         $db = Database::connection();
