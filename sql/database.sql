@@ -35,7 +35,6 @@ CREATE TABLE `Posts` (
 CREATE TABLE `PostsUsers` (
   `idPosts` int(10) UNSIGNED NOT NULL,
   `idUser` int(10) UNSIGNED NOT NULL,
-  `CreatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
