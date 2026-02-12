@@ -29,7 +29,7 @@ class ModeratorController extends BaseController
 
         if ($role === 1) {
             $role = 'admin';
-        } elseif ($role == 2) {
+        } elseif ($role == 2 || $role == 3) {
             $role = 'opperator';
         } else {
             // Not authorized
