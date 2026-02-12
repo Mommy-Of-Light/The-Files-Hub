@@ -23,6 +23,10 @@
         .progress-bar-text {
             font-weight: bold;
         }
+
+        * {
+            font-family: Consolas;
+        }
     </style>
 </head>
 
