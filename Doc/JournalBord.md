@@ -52,11 +52,11 @@ Je suis occupé par le développement backend du site web pour les posts.
 
 ## 12.02.2026
 
-
+Aujourd'hui, nous avons travaillé sur la gestion de likes et de la page pour un post.
 
 ### Kevin:
 
-
+Aujourd'hui, ma tâche consistait à créer le système de gestion de likes avec Bastien, ainsi qu'à concevoir la view pour chaque post.
 
 ### Bastien:
 
