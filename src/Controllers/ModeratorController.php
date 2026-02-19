@@ -7,6 +7,7 @@ namespace TheFileHub\Controllers;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use TheFileHub\Models\Post;
 use TheFileHub\Services\UserService;
 use TheFileHub\Models\User;
 
@@ -48,11 +49,13 @@ class ModeratorController extends BaseController
         if (!UserService::isConnected()) {
             return UserService::unAuthorized($response, $request, $this->view);
         }
+
         return $this->view->render($response, 'roles/moderators.php', [
             'title' => 'TheFileHub | Admin Dashboard',
             'role' => 'admin',
+            'current' => UserService::current(),
             'users' => UserService::getAllUsers(),
-            'posts' => ['dummydata' => 'value'], // Placeholder for POST data if needed
+            'posts' => Post::All(),
         ]);
     }
 
@@ -64,8 +67,9 @@ class ModeratorController extends BaseController
         return $this->view->render($response, 'roles/moderators.php', [
             'title' => 'TheFileHub | Opperator Dashboard',
             'role' => 'opperator',
+            'current' => UserService::current(),
             'users' => UserService::getAllUsers(),
-            'posts' => ['dummydata' => 'value'], // Placeholder for POST data if needed
+            'posts' => Post::All(),
         ]);
     }
 
@@ -76,9 +80,8 @@ class ModeratorController extends BaseController
         $user = User::findById($userId);
         if ($user) {
             if (UserService::current()->idUser === $user->idUser) {
-                // Prevent self-promotion
                 return $response
-                    ->withHeader('Location', '/mod/admin-dashboard')
+                    ->withHeader('Location', '/mod')
                     ->withStatus(302);
             }
             $user->setRoles(min(2, $user->getRoles() + 1)); // Set role to operator
@@ -88,7 +91,7 @@ class ModeratorController extends BaseController
         $_SESSION['user'] = UserService::current();
 
         return $response
-            ->withHeader('Location', '/mod/admin-dashboard')
+            ->withHeader('Location', '/mod')
             ->withStatus(302);
     }
 
@@ -99,21 +102,13 @@ class ModeratorController extends BaseController
         $user = User::findById($userId);
         if ($user) {
             if (UserService::current()->idUser === $user->idUser) {
-                // Prevent self-demotion
                 return $response
-                    ->withHeader('Location', '/mod/admin-dashboard')
-                    ->withStatus(302);
-            }
-            if ($user->getRoles() === 1) {
-                // Prevent demoting admins
-                return $response
-                    ->withHeader('Location', '/mod/admin-dashboard')
+                    ->withHeader('Location', '/mod')
                     ->withStatus(302);
             }
             if ($user->getRoles() === 3) {
-                // Prevent demoting creators
                 return $response
-                    ->withHeader('Location', '/mod/admin-dashboard')
+                    ->withHeader('Location', '/mod')
                     ->withStatus(302);
             }
             $user->setRoles(min(2, $user->getRoles() - 1)); // Set role to regular user
@@ -123,7 +118,7 @@ class ModeratorController extends BaseController
         $_SESSION['user'] = UserService::current();
 
         return $response
-            ->withHeader('Location', '/mod/admin-dashboard')
+            ->withHeader('Location', '/mod')
             ->withStatus(302);
     }
 
@@ -133,11 +128,16 @@ class ModeratorController extends BaseController
 
         $user = User::findById($userId);
         if ($user) {
+            if (UserService::current()->idUser === $user->idUser) {
+                return $response
+                    ->withHeader('Location', '/mod')
+                    ->withStatus(302);
+            }
             $user->delete();
         }
 
         return $response
-            ->withHeader('Location', '/mod/admin-dashboard')
+            ->withHeader('Location', '/mod')
             ->withStatus(302);
     }
 }

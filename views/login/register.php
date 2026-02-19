@@ -1,5 +1,5 @@
-<div class="container py-5">
-    <div class="row justify-content-center">
+<div class="container">
+    <div class="row justify-content-center" style="overflow-y: scroll; -webkit-overflow-scrolling: touch; max-height: 85vh">
         <div class="col-md-8 col-lg-6">
             <div class="card bg-dark border-secondary text-light shadow">
                 <div class="card-body">
@@ -81,6 +81,20 @@
                         </div>
                     </form>
                     <a href="/login" class="d-block text-center mt-3 text-light">Already have an account? Login</a>
+
+                    <?php if (!empty($_SESSION['error'])): ?>
+                        <div class="alert alert-danger">
+                            <?= htmlspecialchars($_SESSION['error']) ?>
+                        </div>
+                        <?php unset($_SESSION['error']); ?>
+                    <?php endif; ?>
+
+                    <?php if (!empty($_SESSION['success'])): ?>
+                        <div class="alert alert-success">
+                            <?= htmlspecialchars($_SESSION['success']) ?>
+                        </div>
+                        <?php unset($_SESSION['success']); ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -7,6 +7,7 @@ namespace TheFileHub\Controllers;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+use TheFileHub\Models\Post;
 use TheFileHub\Services\UserService;
 
 class HomeController extends BaseController
@@ -23,8 +24,23 @@ class HomeController extends BaseController
         if (!UserService::isConnected()) {
             return UserService::unAuthorized($response, $request, $this->view);
         }
+
+        $allPosts = Post::All();
+
+        foreach ($allPosts as $post) {
+            $post->fileExt = PostController::fromPath($post->fileLink);
+        }
+
+        usort($allPosts, function ($a, $b) {
+            $aTotal = $a->likes - $a->dislikes;
+            $bTotal = $b->likes - $b->dislikes;
+
+            return $bTotal <=> $aTotal;
+        });
+
         return $this->view->render($response, 'home/home.php', [
             'title' => 'TheFileHub | Home',
+            'topPosts' => $allPosts
         ]);
     }
 
@@ -36,12 +52,26 @@ class HomeController extends BaseController
 
         $user = UserService::current();
 
-        $nextLevelXpRequierd = (($user->level + 1) * 500);
+        $currentLevel = $user->level;
+        $currentExp = $user->xp;
+        $maxed = false;
+
+        $nextLevelXpRequierd = (($currentLevel + 1) * 500);
+
+        if ($currentExp >= $nextLevelXpRequierd && $currentLevel < 99) {
+            $user->level += 1;
+            $user->xp = 0;
+            $nextLevelXpRequierd = (($currentLevel + 1) * 500);
+            $user->save();
+        } elseif ($currentLevel == 99 && $currentExp >= $nextLevelXpRequierd) {
+            $maxed = true;
+        }
 
         return $this->view->render($response, 'home/profile.php', [
             'title' => 'TheFileHub | Profile',
             'user' => $user,
             'nextLevelXpRequierd' => $nextLevelXpRequierd,
+            'isMaxed' => $maxed
         ]);
     }
 

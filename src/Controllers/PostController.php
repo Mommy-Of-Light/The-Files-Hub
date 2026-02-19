@@ -99,6 +99,7 @@ class PostController extends BaseController
         $post = Post::findById($idPost);
 
         if (!$post) {
+            $_SESSION['error'] = "Post not found.";
             return $response->withHeader('Location', '/posts')->withStatus(302);
         }
 
@@ -143,10 +144,11 @@ class PostController extends BaseController
         $post->modifyLikes($response, $type);
 
         if (!$post) {
+            $_SESSION['error'] = "Post not found.";
             return $response->withHeader('Location', '/posts')->withStatus(302);
         }
 
-        $creator = User::findById($post->getCreator());
+        $creator = $post->getCreator();
 
         if ($type === 'like') {
             $post->setLikes($post->getLikes() + 1);
@@ -155,7 +157,7 @@ class PostController extends BaseController
         } elseif ($type === 'dislike') {
             $post->setDislikes($post->getDislikes() + 1);
             $post->action = 0;
-            $creator->setXp_Add(-5);
+            $creator->setXp_Add(-20);
         }
 
         $post->update();
@@ -166,13 +168,20 @@ class PostController extends BaseController
             ->withStatus(302);
     }
 
-    private static function fromPath(string $path): string
+    public static function fromPath(string $path): string
     {
         $ext = pathinfo($path, PATHINFO_EXTENSION);
-        return self::fromExt($ext);
+
+        $file = self::fromExt($ext);
+
+        if ($file === ""){
+            return $path;
+        }
+
+        return $file;
     }
 
-    private static function fromExt(string $ext): string
+    public static function fromExt(string $ext): string
     {
         $extTypeMap = [
             'jpg' => 'image',
@@ -187,10 +196,14 @@ class PostController extends BaseController
 
         $icon = self::getFileIcon($extTypeMap[$ext] ?? 'file');
 
+        if ($icon === 'image.png'){
+            return "";
+        }
+
         return "assets/defaults/$icon";
     }
 
-    private static function getFileIcon(string $mime): string
+    public static function getFileIcon(string $mime): string
     {
         $iconMap = [
             'image' => 'image.png',

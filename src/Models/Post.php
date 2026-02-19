@@ -39,13 +39,10 @@ class Post extends AbstractModel
         set => $this->dislikes = $value;
     }
 
-    public ?string $createdAt = null {
-        set => $this->createdAt = $value;
-    }
-
     protected array $casts = [];
 
     public string $fileExt = '';
+    
     public int $action = -1;
 
     public function getPost(): int
@@ -53,9 +50,9 @@ class Post extends AbstractModel
         return $this->idPost;
     }
 
-    public function getCreator(): int
+    public function getCreator(): User
     {
-        return $this->idCreator;
+        return User::findById($this->idCreator);
     }
 
     public function setCreator(int $idCreator): void
@@ -200,7 +197,7 @@ class Post extends AbstractModel
         $check->execute();
         $data = $check->fetchAll();
 
-        $creator = User::findById($this->getCreator());
+        $creator = $this->getCreator();
 
         foreach ($data as $row) {
             if ($row['action'] === 1 && $type === 'like') {
@@ -215,7 +212,7 @@ class Post extends AbstractModel
                 $update->bindValue(':idUser', $userId);
                 $update->execute();
                 $this->setLikes($this->getLikes() - 1);
-                $creator->setXp_Add(-5);
+                $creator->setXp_Add(-20);
             } elseif ($row['action'] === 0 && $type === 'like') {
                 $update = $db->prepare("UPDATE PostsUsers SET action = 1 WHERE idPosts = :idPost AND idUser = :idUser");
                 $update->bindValue(':idPost', $this->idPost);

@@ -1,12 +1,18 @@
 <?php
 $userId = $_SESSION['user']->getIdUser() ?? null;
-$isCreator = $userId === $post->getCreator();
+$isCreator = $userId === $post->getCreator()->idUser;
 
 $filePath = $post->getFileLink();
-$fileSize = file_exists($filePath) ? round(filesize($filePath) / 1024, 2) . ' KB' : 'N/A';
+
+$fullPath = __DIR__ . '/../../public' . $filePath;
+
+$fileSize = file_exists($fullPath)
+    ? round(filesize($fullPath) / 1024, 2) . ' KB'
+    : 'N/A';
+
 $fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
 ?>
-<div class="container py-5">
+<div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-10">
 
@@ -46,7 +52,7 @@ $fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
 
                 <div class="mb-3">
                     <h5>
-                        By #<?= $post->getCreator(); ?>
+                        By <?= $post->getCreator()->userName; ?>
                     </h5>
                 </div>
 

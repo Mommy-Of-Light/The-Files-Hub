@@ -39,19 +39,20 @@ class LoginController extends BaseController
         $username = $data['username'] ?? '';
         $password = $data['password'] ?? '';
 
-        // Find user by username
         $user = User::findByUsername($username);
 
         if ($user && password_verify($password, $user->getPassword())) {
-            // Connect user
             UserService::connect($user);
+
+            $_SESSION['success'] = "Login successful!";
 
             return $response
                 ->withHeader('Location', '/')
                 ->withStatus(302);
         }
 
-        // Invalid credentials, redirect back to login
+        $_SESSION['error'] = "Invalid credentials!";
+
         return $response
             ->withHeader('Location', '/login')
             ->withStatus(302);
@@ -79,8 +80,9 @@ class LoginController extends BaseController
         /** @var \Psr\Http\Message\UploadedFileInterface|null $profilePicture */
         $profilePicture = $uploadedFiles['pfp'] ?? null;
 
-        // Check if username or email already exists
         if (User::findByUsername($username) || User::findByEmail($email)) {
+            $_SESSION['error'] = "Username or email already exists.";
+
             return $response
                 ->withHeader('Location', '/register')
                 ->withStatus(302);
@@ -88,11 +90,11 @@ class LoginController extends BaseController
 
         $profilePicturePath = null;
 
-        // Validate & save profile picture
         if ($profilePicture && $profilePicture->getError() === UPLOAD_ERR_OK) {
             $mimeType = $profilePicture->getClientMediaType();
 
             if (!in_array($mimeType, ['image/jpeg', 'image/png'])) {
+                $_SESSION['error'] = "Invalid profile picture format.";
                 return $response
                     ->withHeader('Location', '/register')
                     ->withStatus(302);
@@ -113,7 +115,6 @@ class LoginController extends BaseController
             $newFilename = 'default.png';
         }
 
-        // Create user
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         User::create([
@@ -128,6 +129,8 @@ class LoginController extends BaseController
             'profilePicture' => $newFilename,
         ]);
 
+        $_SESSION['success'] = "Registration successful!";
+
         return $response
             ->withHeader('Location', '/login')
             ->withStatus(302);
@@ -136,6 +139,8 @@ class LoginController extends BaseController
     public function logout(Request $request, Response $response): Response
     {
         UserService::disconnect();
+
+        $_SESSION['success'] = "Logout successful!";
 
         return $response
             ->withHeader('Location', '/login')
