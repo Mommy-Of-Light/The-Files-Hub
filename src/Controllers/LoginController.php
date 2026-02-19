@@ -109,6 +109,9 @@ class LoginController extends BaseController
                 __DIR__ . '/../../public/assets/pfp/' . $newFilename
             );
         }
+        else {
+            $newFilename = 'default.png';
+        }
 
         // Create user
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
