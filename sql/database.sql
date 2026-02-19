@@ -34,8 +34,10 @@ CREATE TABLE `Posts` (
 
 CREATE TABLE `PostsUsers` (
   `idPosts` int(10) UNSIGNED NOT NULL,
-  `idUser` int(10) UNSIGNED NOT NULL,
+  `idUser` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+ALTER TABLE `PostsUsers` ADD `action` TINYINT(1) NOT NULL COMMENT '1:like, 0:dislike' AFTER `idUser`;
 
 -- --------------------------------------------------------
 
