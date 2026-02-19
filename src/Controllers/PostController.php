@@ -10,6 +10,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use TheFileHub\Models\Post;
 use TheFileHub\Models\User;
 use TheFileHub\Services\UserService;
+use \TheFileHub\Core\Database;
 
 class PostController extends BaseController
 {
@@ -52,8 +53,8 @@ class PostController extends BaseController
         $name = $data['name'] ?? "no title";
 
         if (!$uploadedFile || $uploadedFile->getError() !== UPLOAD_ERR_OK) {
-            $_SESSION['error'] = 'File upload failed.';
-            return $response->withHeader('Location', '/posts/new')->withStatus(302);
+            $_SESSION['error'] = 'File upload failed.' . ($uploadedFile ? $uploadedFile->getError() : 'No file uploaded.');
+            return $response->withHeader('Location', '/post/new')->withStatus(302);
         }
 
         $uploadDir = __DIR__ . '/../../public/uploads/posts';
@@ -93,20 +94,18 @@ class PostController extends BaseController
         }
 
         // id sent by url get
-        $idPost = (int)explode('/', $request->getUri()->getPath())[3];
+        $idPost = (int) explode('/', $request->getUri()->getPath())[3];
+
+        $post = Post::findById($idPost);
+
+        if (!$post) {
+            return $response->withHeader('Location', '/posts')->withStatus(302);
+        }
 
         return $this->view->render($response, 'posts/single.php', [
             'title' => 'The TheFileHub | Single Post',
-            'post' => Post::findById($idPost)
+            'post' => $post
         ]);
-    }
-    public function singleLike(Request $request, Response $response): Response
-    {
-        if (!UserService::isConnected()) {
-            return UserService::unAuthorized($response, $request, $this->view);
-        }
-
-        return $this->view->render($response, 'posts/single.php');
     }
 
     public function singleUpdate(Request $request, Response $response): Response
@@ -126,7 +125,49 @@ class PostController extends BaseController
 
         return $this->view->render($response, 'posts/single.php');
     }
-    private static function fromPath(string $path): string {
+
+    public function gestionLikes(Request $request, Response $response, array $args): Response
+    {
+        if (!UserService::isConnected()) {
+            return UserService::unAuthorized($response, $request, $this->view);
+        }
+
+        $idPost = (int) $args['id'];
+        $type = $args['type'];
+        $user = UserService::current();
+        $userId = $user->getIdUser();
+
+
+        $post = Post::findById($idPost);
+
+        $post->modifyLikes($response, $type);
+
+        if (!$post) {
+            return $response->withHeader('Location', '/posts')->withStatus(302);
+        }
+
+        $creator = User::findById($post->getCreator());
+
+        if ($type === 'like') {
+            $post->setLikes($post->getLikes() + 1);
+            $post->action = 1;
+            $creator->setXp_Add(20);
+        } elseif ($type === 'dislike') {
+            $post->setDislikes($post->getDislikes() + 1);
+            $post->action = 0;
+            $creator->setXp_Add(-5);
+        }
+
+        $post->update();
+        $creator->update();
+
+        return $response
+            ->withHeader('Location', "/post/single/$idPost")
+            ->withStatus(302);
+    }
+
+    private static function fromPath(string $path): string
+    {
         $ext = pathinfo($path, PATHINFO_EXTENSION);
         return self::fromExt($ext);
     }
@@ -141,13 +182,14 @@ class PostController extends BaseController
             'mp4' => 'video',
             'mp3' => 'audio',
             'txt' => 'text',
+            'exe' => 'executable windows'
         ];
 
         $icon = self::getFileIcon($extTypeMap[$ext] ?? 'file');
 
         return "assets/defaults/$icon";
-    }    
-    
+    }
+
     private static function getFileIcon(string $mime): string
     {
         $iconMap = [
@@ -155,10 +197,8 @@ class PostController extends BaseController
             'video' => 'video.png',
             'audio' => 'audio.png',
             'text' => 'text.png',
-
-            'application/pdf' => 'pdf.png',
-            'application/zip' => 'archive.png',
-            'application/x-rar' => 'archive.png',
+            'executable windows' => 'exe.png',
+            'file' => 'untracked.png'
         ];
 
 

@@ -4,6 +4,12 @@
 
             <div class="card bg-dark border-secondary text-light shadow">
                 <div class="card-body">
+                    <?php if (isset($_SESSION['error'])): ?>
+                        <div class="alert alert-danger">
+                            <?= htmlspecialchars($_SESSION['error']) ?>
+                        </div>
+                        <?php unset($_SESSION['error']); ?>
+                    <?php endif; ?>
                     <form method="post" enctype="multipart/form-data">
                         <div class="mb-4">
                             <input type="file" name="file" id="file"

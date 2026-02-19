@@ -55,7 +55,7 @@
                         </p>
                         <p><strong>Email:</strong> <?= htmlspecialchars($user->getEmail()) ?></p>
                         <p><strong>Username:</strong> <?= htmlspecialchars($user->getUsername()) ?></p>
-                        <p><strong>Roles:</strong> <?= htmlspecialchars($user->getRoleName()) ?></p>
+                        <p><strong>Roles:</strong> <?= htmlspecialchars($user->getRoleName($user->getRoles())) ?></p>
                     </div>
 
                     <form
