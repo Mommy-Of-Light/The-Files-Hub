@@ -32,9 +32,9 @@ $app->get('/post/new', [PostController::class, 'new']);
 $app->post('/post/new', [PostController::class, 'submit']);
 // $app->get('/post/single/debbug', [PostController::class, 'single']);
 $app->get('/post/single/{id:\d+}', [PostController::class, 'single']);
-$app->post('/post/single/{id:\d+}/like', [PostController::class, 'singleLike']);
 $app->post('/post/single/{id:\d+}/update', [PostController::class, 'singleUpdate']);
 $app->post('/post/single/{id:\d+}/delete', [PostController::class, 'singleDelete']);
+$app->post('/post/single/{id:\d+}/{type}', [PostController::class, 'gestionLikes']);
 
 // Secret route
 $app->get('/secret', [HomeController::class, 'secret']);
