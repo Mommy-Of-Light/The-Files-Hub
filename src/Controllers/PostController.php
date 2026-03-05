@@ -14,6 +14,13 @@ use \TheFileHub\Core\Database;
 
 class PostController extends BaseController
 {
+    /**
+     * Show all posts
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function all(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
@@ -31,6 +38,13 @@ class PostController extends BaseController
         ]);
     }
 
+    /**
+     * Show new post form
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function new(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
@@ -40,6 +54,13 @@ class PostController extends BaseController
         return $this->view->render($response, 'posts/new.php');
     }
 
+    /**
+     * Handle new post submission
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function submit(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
@@ -87,13 +108,19 @@ class PostController extends BaseController
             ->withStatus(302);
     }
 
+    /**
+     * Show single post
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function single(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
             return UserService::unAuthorized($response, $request, $this->view);
         }
 
-        // id sent by url get
         $idPost = (int) explode('/', $request->getUri()->getPath())[3];
 
         $post = Post::findById($idPost);
@@ -103,30 +130,126 @@ class PostController extends BaseController
             return $response->withHeader('Location', '/posts')->withStatus(302);
         }
 
+        $user = UserService::current();
+        $isCreator = $user->getIdUser() === $post->getCreator()->idUser;
+
+        $fullPath = __DIR__ . '/../../public' . $post->getFileLink();
+
+        $fileSize = file_exists($fullPath)
+            ? round(filesize($fullPath) / 1024, 2) . ' KB'
+            : 'N/A';
+
+        $fileExt = pathinfo($post->getFileLink(), PATHINFO_EXTENSION);
+
         return $this->view->render($response, 'posts/single.php', [
             'title' => 'The TheFileHub | Single Post',
+            'post' => $post,
+            'isCreator' => $isCreator,
+            'fileSize' => $fileSize,
+            'fileExt' => $fileExt
+        ]);
+    }
+
+    /**
+     * Show post update form
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function singleToUpdate(Request $request, Response $response): Response
+    {
+        if (!UserService::isConnected()) {
+            return UserService::unAuthorized($response, $request, $this->view);
+        }
+
+        $idPost = (int) explode('/', $request->getUri()->getPath())[3];
+
+        $post = Post::findById($idPost);
+
+        return $this->view->render($response, 'posts/update.php', [
             'post' => $post
         ]);
     }
 
+    /**
+     * Handle post update submission
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function singleUpdate(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
             return UserService::unAuthorized($response, $request, $this->view);
         }
 
-        return $this->view->render($response, 'posts/single.php');
+        $data = $request->getParsedBody();
+
+        $idPost = (int) $data['idPost'];
+        $newName = $data['name'] ?? null;
+        $newDescription = $data['desc'] ?? null;
+
+        $post = Post::findById($idPost);
+
+        if ($newName == null || $newDescription == null) {
+            $_SESSION['error'] = "Name and description cannot be empty.";
+            return $response->withHeader('Location', "/post/single/{$idPost}/update")->withStatus(302);
+        }
+
+        if ($post) {
+            $post->setName($newName);
+            $post->setDescription($newDescription);
+            $post->update();
+        }
+
+        return $this->view->render($response, 'posts/single.php', [
+            'post' => $post
+        ]);
     }
 
+    /**
+     * Handle post delete submission
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function singleDelete(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
             return UserService::unAuthorized($response, $request, $this->view);
         }
 
-        return $this->view->render($response, 'posts/single.php');
+        $idPost = (int) $request->getParsedBody()['idPost'];
+        $fromMod = (int) $request->getParsedBody()['fromMod'];
+
+        $post = Post::findById($idPost);
+
+        if (!$post) {
+            $_SESSION['error'] = "Post not found.";
+            return $response->withHeader('Location', '/posts')->withStatus(302);
+        }
+
+        $post->delete();
+
+        $_SESSION['success'] = "Post deleted successfully.";
+
+        if ($fromMod) {
+            return $response->withHeader('Location', '/mod')->withStatus(302);
+        }
+        return $response->withHeader('Location', '/posts')->withStatus(302);
     }
 
+    /**
+     * Manage post likes and dislikes
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function gestionLikes(Request $request, Response $response, array $args): Response
     {
         if (!UserService::isConnected()) {
@@ -168,19 +291,40 @@ class PostController extends BaseController
             ->withStatus(302);
     }
 
+    /**
+     * Returns a file representation based on the file extension extracted from the given path.
+     *
+     * This method extracts the extension from the provided file path and attempts to retrieve
+     * a corresponding file representation using the `fromExt` method. If no representation is found,
+     * it returns the original path.
+     *
+     * @param string $path The file path from which to extract the extension.
+     * @return string The file representation based on the extension, or the original path if not found.
+     */
     public static function fromPath(string $path): string
     {
         $ext = pathinfo($path, PATHINFO_EXTENSION);
 
         $file = self::fromExt($ext);
 
-        if ($file === ""){
+        if (empty($file)) {
             return $path;
         }
 
         return $file;
     }
 
+    /**
+     * Returns the asset path for the icon corresponding to a given file extension.
+     *
+     * Maps the provided file extension to a file type using a predefined map,
+     * then retrieves the appropriate icon filename using getFileIcon().
+     * If the icon is 'image.png', returns an empty string.
+     * Otherwise, returns the path to the icon in the assets/defaults directory.
+     *
+     * @param string $ext The file extension to map (e.g., 'jpg', 'mp3').
+     * @return string The asset path for the icon, or an empty string if the icon is 'image.png'.
+     */
     public static function fromExt(string $ext): string
     {
         $extTypeMap = [
@@ -196,13 +340,24 @@ class PostController extends BaseController
 
         $icon = self::getFileIcon($extTypeMap[$ext] ?? 'file');
 
-        if ($icon === 'image.png'){
+        if ($icon === 'image.png') {
             return "";
         }
 
         return "assets/defaults/$icon";
     }
 
+    /**
+     * Returns the filename of the icon image corresponding to a given MIME type.
+     *
+     * This method maps common MIME type groups (e.g., 'image', 'video', 'audio', 'text', 'executable windows')
+     * to specific icon filenames. If the MIME type is not directly mapped, it attempts to use the group part
+     * of the MIME type (the substring before the '/') to find a matching icon. If no match is found, a default
+     * icon filename is returned.
+     *
+     * @param string $mime The MIME type of the file (e.g., 'image/png', 'video/mp4').
+     * @return string The filename of the corresponding icon image.
+     */
     public static function getFileIcon(string $mime): string
     {
         $iconMap = [

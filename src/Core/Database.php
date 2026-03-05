@@ -31,7 +31,6 @@ class Database
     
                 $pdo = new PDO($dsn, DB_USER, DB_PASSWORD, $options);
             } catch (\Throwable $th) {
-                // throw new \RuntimeException('Database connection failed.');
             }
         }
 

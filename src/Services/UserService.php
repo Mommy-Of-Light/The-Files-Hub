@@ -40,7 +40,6 @@ class UserService
      */
     public static function connect(User $user): void
     {
-        // Put in session
         $_SESSION['user'] = $user;
         session_regenerate_id(true);
     }
@@ -52,16 +51,28 @@ class UserService
      */
     public static function disconnect(): void
     {
-        // Remove from session
         unset($_SESSION['user']);
         session_regenerate_id(true);
     }
 
+    /**
+     * Get all users
+     *
+     * @return User[]
+     */
     public static function getAllUsers(): array
     {
         return User::All();
     }
 
+    /**
+     * Handle unauthorized access
+     *
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Slim\Views\PhpRenderer $view
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public static function unAuthorized(\Psr\Http\Message\ResponseInterface $response, \Psr\Http\Message\ServerRequestInterface $request, \Slim\Views\PhpRenderer $view): \Psr\Http\Message\ResponseInterface
     {
         $view->setLayout('layout.php');

@@ -6,6 +6,22 @@ namespace TheFileHub\Models;
 
 use TheFileHub\Core\Database;
 
+/**
+ * Class User
+ *
+ * Represents a user entity with personal and account information.
+ *
+ * @property ?string $firstName       The user's first name.
+ * @property ?string $lastName        The user's last name.
+ * @property ?string $userName        The user's username.
+ * @property ?string $email           The user's email address.
+ * @property ?string $password        The user's hashed password.
+ * @property ?string $profilePicture  The path or URL to the user's profile picture.
+ * @property ?int    $roles           The user's role(s) identifier.
+ * @property ?int    $level           The user's level.
+ * @property ?int    $xp              The user's experience points.
+ * @property array   $casts           Attribute casting definitions.
+ */
 class User extends AbstractModel
 {
     /**
@@ -60,53 +76,103 @@ class User extends AbstractModel
 
     protected array $casts = [];
 
-    #region Getters/Setters
-
+    /**
+     * Get the user ID.
+     *
+     * @return int
+     */
     public function getIdUser(): int
     {
         return $this->idUser;
     }
 
+    /**
+     * Get the first name of the user.
+     *
+     * @return string
+     */
     public function getFirstName(): string
     {
         return $this->firstName;
     }
 
+    /**
+     * Get the last name of the user.
+     *
+     * @return string
+     */
     public function getLastName(): string
     {
         return $this->lastName;
     }
 
+    /**
+     * Get the username of the user.
+     *
+     * @return string
+     */
     public function getUsername(): string
     {
         return $this->userName;
     }
 
+    /**
+     * Get the email of the user.
+     *
+     * @return string
+     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
+    /**
+     * Get the hashed password of the user.
+     *
+     * @return string
+     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
+    /**
+     * Get the profile picture URL/path.
+     *
+     * @return string
+     */
     public function getProfilePicture(): string
     {
         return $this->profilePicture;
     }
 
+    /**
+     * Get the integer value of roles assigned to the user.
+     *
+     * @return int
+     */
     public function getRoles(): int
     {
         return $this->roles;
     }
 
+    /**
+     * Set the roles for the user.
+     *
+     * @param int $roles
+     * @return void
+     */
     public function setRoles(int $roles): void
     {
         $this->roles = $roles;
     }
 
+    /**
+     * Convert a role integer to its string name.
+     *
+     * @param int $role
+     * @return string
+     */
     public function getRoleName(int $role): string
     {
         if ($role === 1) {
@@ -121,23 +187,42 @@ class User extends AbstractModel
         return 'user';
     }
 
+    /**
+     * Get the user's current level.
+     *
+     * @return int
+     */
     public function getLevel(): int
     {
         return $this->level;
     }
 
+    /**
+     * Get the user's current experience points (XP).
+     *
+     * @return int
+     */
     public function getXp(): int
     {
         return $this->xp;
     }
 
+    /**
+     * Add XP to the user.
+     *
+     * @param int $xp
+     * @return void
+     */
     public function setXp_Add(int $xp): void
     {
         $this->xp += $xp;
     }
 
-    #endregion
-
+    /**
+     * Retrieve all users from the database.
+     *
+     * @return User[] Array of User objects. Returns empty array if no users found.
+     */
     public static function All(): array
     {
         $db = Database::connection();
@@ -168,6 +253,12 @@ class User extends AbstractModel
         return $users ?? [];
     }
 
+    /**
+     * Find a user by their ID.
+     *
+     * @param int $idUser
+     * @return User|null Returns the User object if found, null otherwise.
+     */
     public static function findById(int $idUser): User|null
     {
         $db = Database::connection();
@@ -185,6 +276,12 @@ class User extends AbstractModel
         return $row ? new self()->fill($row) : null;
     }
 
+    /**
+     * Find a user by their username.
+     *
+     * @param string $userName
+     * @return User|null Returns the User object if found, null otherwise.
+     */
     public static function findByUsername(string $userName): User|null
     {
         $db = Database::connection();
@@ -202,6 +299,12 @@ class User extends AbstractModel
         return $row ? new self()->fill($row) : null;
     }
 
+    /**
+     * Find a user by their email address.
+     *
+     * @param string $email
+     * @return User|null Returns the User object if found, null otherwise.
+     */
     public static function findByEmail(string $email): User|null
     {
         $db = Database::connection();
@@ -219,6 +322,11 @@ class User extends AbstractModel
         return $row ? new self()->fill($row) : null;
     }
 
+    /**
+     * Insert a new user into the database.
+     *
+     * @return bool True on success, false on failure.
+     */
     public function insert(): bool
     {
         $db = Database::connection();
@@ -246,6 +354,11 @@ class User extends AbstractModel
         return $success;
     }
 
+    /**
+     * Update the user's data in the database.
+     *
+     * @return bool True on success, false on failure.
+     */
     public function update(): bool
     {
         $db = Database::connection();
@@ -270,6 +383,11 @@ class User extends AbstractModel
         return $success;
     }
 
+    /**
+     * Delete the user from the database.
+     *
+     * @return bool True on success, false on failure.
+     */
     public function delete(): bool
     {
         $db = Database::connection();

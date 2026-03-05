@@ -33,7 +33,6 @@ class ModeratorController extends BaseController
         } elseif ($role == 2 || $role == 3) {
             $role = 'opperator';
         } else {
-            // Not authorized
             return $response
                 ->withHeader('Location', '/')
                 ->withStatus(302);
@@ -44,6 +43,13 @@ class ModeratorController extends BaseController
             ->withStatus(302);
     }
 
+    /**
+     * Show admin dashboard
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function adminDashboard(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
@@ -59,7 +65,14 @@ class ModeratorController extends BaseController
         ]);
     }
 
-        public function opperatorDashboard(Request $request, Response $response): Response
+    /**
+     * Show opperator dashboard
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
+    public function opperatorDashboard(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
             return UserService::unAuthorized($response, $request, $this->view);
@@ -73,6 +86,14 @@ class ModeratorController extends BaseController
         ]);
     }
 
+    /**
+     * Promote user to higher role
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function promoteUser(Request $request, Response $response, array $args): Response
     {
         $userId = (int) $args['id'];
@@ -95,6 +116,14 @@ class ModeratorController extends BaseController
             ->withStatus(302);
     }
 
+    /**
+     * Demote user to lower role
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function demoteUser(Request $request, Response $response, array $args): Response
     {
         $userId = (int) $args['id'];
@@ -122,6 +151,14 @@ class ModeratorController extends BaseController
             ->withStatus(302);
     }
 
+    /**
+     * Delete user
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param array $args
+     * @return Response
+     */
     public function deleteUser(Request $request, Response $response, array $args): Response
     {
         $userId = (int) $args['id'];

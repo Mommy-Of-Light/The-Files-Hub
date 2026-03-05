@@ -33,6 +33,13 @@ class LoginController extends BaseController
         ]);
     }
 
+    /**
+     * Handle login form submission
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function login(Request $request, Response $response): Response
     {
         $data = (array) $request->getParsedBody();
@@ -58,6 +65,13 @@ class LoginController extends BaseController
             ->withStatus(302);
     }
 
+    /**
+     * Show registration page
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function showRegister(Request $request, Response $response): Response
     {
         return $this->view->render($response, 'login/register.php', [
@@ -66,6 +80,13 @@ class LoginController extends BaseController
         ]);
     }
 
+    /**
+     * Handle registration form submission
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function register(Request $request, Response $response): Response
     {
         $data = (array) $request->getParsedBody();
@@ -136,6 +157,13 @@ class LoginController extends BaseController
             ->withStatus(302);
     }
 
+    /**
+     * Handle logout
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function logout(Request $request, Response $response): Response
     {
         UserService::disconnect();

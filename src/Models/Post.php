@@ -8,6 +8,22 @@ use Slim\Psr7\Response;
 use TheFileHub\Core\Database;
 use TheFileHub\Services\UserService;
 
+/**
+ * Class Post
+ *
+ * Represents a post entity in the application.
+ * Handles CRUD operations, likes/dislikes management, and user associations.
+ *
+ * @property int|null    $idPost      The unique identifier for the post.
+ * @property int|null    $idCreator   The unique identifier for the creator (user) of the post.
+ * @property string|null $name        The name/title of the post.
+ * @property string|null $fileLink    The link to the file associated with the post.
+ * @property string|null $description The description of the post.
+ * @property int|null    $likes       The number of likes for the post.
+ * @property int|null    $dislikes    The number of dislikes for the post.
+ * @property string      $fileExt     The file extension of the post's file.
+ * @property int         $action      The current user's action on the post (-1: none, 0: dislike, 1: like).
+ */
 class Post extends AbstractModel
 {
     protected static ?string $primaryKey = 'idPost';
@@ -42,74 +58,171 @@ class Post extends AbstractModel
     protected array $casts = [];
 
     public string $fileExt = '';
-    
+
     public int $action = -1;
 
+    /**
+     * Get the post ID.
+     *
+     * @return int
+     */
     public function getPost(): int
     {
         return $this->idPost;
     }
 
+    /**
+     * Get the post name/title.
+     *
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the post name/title.
+     *
+     * @param string $name
+     * @return void
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * Get the creator (User) of the post.
+     *
+     * @return User
+     */
     public function getCreator(): User
     {
         return User::findById($this->idCreator);
     }
 
+    /**
+     * Set the creator ID of the post.
+     *
+     * @param int $idCreator
+     * @return void
+     */
     public function setCreator(int $idCreator): void
     {
         $this->idCreator = $idCreator;
     }
 
+    /**
+     * Get the file link of the post.
+     *
+     * @return string
+     */
     public function getFileLink(): string
     {
         return $this->fileLink;
     }
 
+    /**
+     * Set the file link of the post.
+     *
+     * @param string $fileLink
+     * @return void
+     */
     public function setFileLink(string $fileLink): void
     {
         $this->fileLink = $fileLink;
     }
 
+    /**
+     * Get the description of the post.
+     *
+     * @return string
+     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
+    /**
+     * Set the description of the post.
+     *
+     * @param string $description
+     * @return void
+     */
     public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
+    /**
+     * Get the number of likes.
+     *
+     * @return int
+     */
     public function getLikes(): int
     {
         return $this->likes;
     }
 
+    /**
+     * Set the number of likes.
+     *
+     * @param int $likes
+     * @return void
+     */
     public function setLikes(int $likes): void
     {
         $this->likes = $likes;
     }
 
+    /**
+     * Get the number of dislikes.
+     *
+     * @return int
+     */
     public function getDislikes(): int
     {
         return $this->dislikes;
     }
 
+    /**
+     * Set the number of dislikes.
+     *
+     * @param int $dislikes
+     * @return void
+     */
     public function setDislikes(int $dislikes): void
     {
         $this->dislikes = $dislikes;
     }
 
+    /**
+     * Get the file extension.
+     *
+     * @return string
+     */
     public function getFileExt(): string
     {
         return $this->fileExt;
     }
 
+    /**
+     * Set the file extension.
+     *
+     * @param string $fileExt
+     * @return void
+     */
     public function setFileExt(string $fileExt): void
     {
         $this->fileExt = $fileExt;
     }
 
+    /**
+     * Get the current user's action on this post (-1: none, 0: dislike, 1: like)
+     *
+     * @return int
+     */
     public function getAction(): int
     {
         $db = Database::connection();
@@ -122,6 +235,11 @@ class Post extends AbstractModel
         return $data ? (int) $data['action'] : -1;
     }
 
+    /**
+     * Retrieve all posts from the database.
+     *
+     * @return Post[] Array of Post objects. Returns an empty array if no posts found.
+     */
     public static function All(): array
     {
         $db = Database::connection();
@@ -149,6 +267,12 @@ class Post extends AbstractModel
         return $posts ?? [];
     }
 
+    /**
+     * Find a single post by its ID.
+     *
+     * @param int $idPost The ID of the post to find.
+     * @return Post|null Returns the Post object if found, or null if not found.
+     */
     public static function findById(int $idPost): Post|null
     {
         $db = Database::connection();
@@ -167,6 +291,12 @@ class Post extends AbstractModel
         return $row ? new self()->fill($row) : null;
     }
 
+    /**
+     * Find a post by the creator's ID.
+     *
+     * @param string $idCreator The user ID of the creator.
+     * @return Post|null Returns the Post object if found, or null if not found.
+     */
     public static function findByCreator(string $idCreator): Post|null
     {
         $db = Database::connection();
@@ -185,6 +315,13 @@ class Post extends AbstractModel
         return $row ? new self()->fill($row) : null;
     }
 
+    /**
+     * Modify the current user's like or dislike on the post.
+     *
+     * @param Response $response The Slim response object for redirection.
+     * @param string $type The action type: 'like' or 'dislike'.
+     * @return Response The response object, possibly with redirection headers if action was invalid.
+     */
     public function modifyLikes($response, string $type): Response
     {
         $db = Database::connection();
@@ -212,14 +349,12 @@ class Post extends AbstractModel
                 $update->bindValue(':idUser', $userId);
                 $update->execute();
                 $this->setLikes($this->getLikes() - 1);
-                $creator->setXp_Add(-20);
             } elseif ($row['action'] === 0 && $type === 'like') {
                 $update = $db->prepare("UPDATE PostsUsers SET action = 1 WHERE idPosts = :idPost AND idUser = :idUser");
                 $update->bindValue(':idPost', $this->idPost);
                 $update->bindValue(':idUser', $userId);
                 $update->execute();
                 $this->setDislikes($this->getDislikes() - 1);
-                $creator->setXp_Add(20);
             }
         }
 
@@ -228,6 +363,11 @@ class Post extends AbstractModel
         return $response;
     }
 
+    /**
+     * Insert a new post into the database.
+     *
+     * @return bool True on success, false on failure.
+     */
     public function insert(): bool
     {
         $db = Database::connection();
@@ -253,6 +393,11 @@ class Post extends AbstractModel
         return $success;
     }
 
+    /**
+     * Update the post in the database and the user's action (like/dislike).
+     *
+     * @return bool True on success, false on failure.
+     */
     public function update(): bool
     {
         $db = Database::connection();
@@ -310,8 +455,11 @@ class Post extends AbstractModel
         }
     }
 
-
-
+    /**
+     * Delete the post from the database.
+     *
+     * @return bool True on success, false on failure.
+     */
     public function delete(): bool
     {
         $db = Database::connection();
@@ -325,5 +473,4 @@ class Post extends AbstractModel
 
         return $stmt->execute();
     }
-
 }

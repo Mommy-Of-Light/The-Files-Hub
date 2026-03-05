@@ -44,6 +44,13 @@ class HomeController extends BaseController
         ]);
     }
 
+    /**
+     * Show user profile
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function profile(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
@@ -75,6 +82,13 @@ class HomeController extends BaseController
         ]);
     }
 
+    /**
+     * Update user profile picture
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function updateProfilePicture(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
@@ -140,6 +154,13 @@ class HomeController extends BaseController
             ->withStatus(302);
     }
 
+    /**
+     * Delete user account
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function deleteAccount(Request $request, Response $response): Response
     {
         if (!UserService::isConnected()) {
@@ -154,6 +175,13 @@ class HomeController extends BaseController
         return $response->withHeader('Location', '/profile')->withStatus(302);
     }
 
+    /**
+     * Show secret page
+     *
+     * @param Request $request
+     * @param Response $response
+     * @return Response
+     */
     public function secret(Request $request, Response $response): Response
     {
         return $this->view->render($response, 'errors/418.php', [
