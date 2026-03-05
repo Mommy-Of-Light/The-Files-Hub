@@ -34,10 +34,9 @@ CREATE TABLE `Posts` (
 
 CREATE TABLE `PostsUsers` (
   `idPosts` int(10) UNSIGNED NOT NULL,
-  `idUser` int(10) UNSIGNED NOT NULL
+  `idUser` int(10) UNSIGNED NOT NULL,
+  `action` TINYINT(1) NOT NULL COMMENT '1:like, 0:dislike'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
-ALTER TABLE `PostsUsers` ADD `action` TINYINT(1) NOT NULL COMMENT '1:like, 0:dislike' AFTER `idUser`;
 
 -- --------------------------------------------------------
 
@@ -57,17 +56,6 @@ CREATE TABLE `Users` (
   `xp` int(11) DEFAULT 0,
   `profilePicture` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Déchargement des données de la table `Users`
---
-
-INSERT INTO `Users` (`idUser`, `firstName`, `lastName`, `userName`, `email`, `password`, `roles`, `level`, `xp`, `profilePicture`) VALUES
-(1, 'Dev', 'Admin', 'Creator', 'empress.mommy.of.light@gmail.com', '$2y$12$DLfRhyHaj0cfeNgfAmXKb.NX3FgTO3b/rhsSEEI.b8CJntg2QbEZa', 3, 0, 0, 'Creator_pfp.png');
-
---
--- Index pour les tables déchargées
---
 
 --
 -- Index pour la table `Posts`
