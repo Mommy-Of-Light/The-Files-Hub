@@ -60,3 +60,24 @@ Aujourd'hui, ma tâche consistait à créer le système de gestion de likes avec
 
 ### Bastien:
 
+Aujourd'hui, j'ai fais des petites modifications dans la bdd et donner le role opp aux créateurs
+
+## 19.02.2026
+
+### Kevin:
+
+Absent
+
+### Bastien:
+
+Aujourd'hui, j'ai fais des petites retouches. Enlever les routes obsoletes, fini le system de like et dislike, fini la page moderateur et ajouter des retours aux users.
+
+## 05.03.2026
+
+### Kevin:
+
+Aujourd'hui, ma tâche consistait à compléter la documentation du projet, car il nous manquait autant le fichier README, le journal de bord, le rapport de tests et le trello.
+
+### Bastien:
+
+Aujourd'hui, j'ai fais les derniers bugs fix sur le site et je me suis occupé des commentaires du code

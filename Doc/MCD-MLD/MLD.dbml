@@ -1,0 +1,28 @@
+Table Users {
+  idUser int [primary key]
+  firstName varchar
+  lastName varchar
+  userName varchar [unique]
+  email varchar [unique]
+  password varchar
+  roles int
+  level int
+  xp int
+  profilePicture text
+}
+
+Table Posts {
+  idPost int [primary key]
+  idCreator int [ref: > Users.idUser]
+  name varchar
+  fileLink text
+  description longtext
+  likes int
+  dislikes int
+}
+
+Table PostsUsers {
+  idPosts int [ref: > Posts.idPost]
+  idUser int [ref: > Users.idUser]
+  action boolean
+}
