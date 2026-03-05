@@ -1,17 +1,3 @@
-<?php
-$userId = $_SESSION['user']->getIdUser() ?? null;
-$isCreator = $userId === $post->getCreator()->idUser;
-
-$filePath = $post->getFileLink();
-
-$fullPath = __DIR__ . '/../../public' . $filePath;
-
-$fileSize = file_exists($fullPath)
-    ? round(filesize($fullPath) / 1024, 2) . ' KB'
-    : 'N/A';
-
-$fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
-?>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -84,7 +70,7 @@ $fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
                     <?php if ($isCreator): ?>
                         <div class="d-flex gap-3">
                             <a 
-                                href="/post/single/<?= $post->getPost() ?>/edit" 
+                                href="/post/single/<?= $post->getPost() ?>/update" 
                                 class="btn btn-warning"
                             >
                                 Modifier
@@ -95,6 +81,7 @@ $fileExt = pathinfo($filePath, PATHINFO_EXTENSION);
                                 method="POST"
                                 onsubmit="return confirm('Supprimer ce post?');"
                             >
+                                <input type="hidden" name="idPost" value="<?= $post->getPost() ?>">
                                 <button type="submit" class="btn btn-danger">
                                     Supprimer
                                 </button>

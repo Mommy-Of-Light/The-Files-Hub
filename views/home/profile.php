@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row justify-content-center" style="overflow-y: scroll; -webkit-overflow-scrolling: touch; max-height: 80vh">
+    <div class="row justify-content-center" style="overflow-y: auto; -webkit-overflow-scrolling: touch; max-height: 80vh">
         <div class="col-lg-6">
 
             <div class="card-body text-center">

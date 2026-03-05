@@ -4,3 +4,11 @@
             style="max-width: 90vw; max-height: 90vh; width: 90vw; height: 90vh; object-fit: contain; cursor: pointer;">
     </a>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        setTimeout(function () {
+            window.location.href = '/';
+        }, 500);
+    });
+</script>

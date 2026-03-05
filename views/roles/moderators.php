@@ -74,9 +74,11 @@
                         <td><?= htmlspecialchars($post->name) ?></td>
                         <td><a href="/post/single/<?= $post->idPost ?>">To the post</a></td>
                         <td>
-                            <form method="POST" action="/mod/post/delete/<?= $post->idPost ?>">
-                                <button class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ce post ?')">
-                                    Supprimer
+                            <form method="POST" action="/post/single/<?= $post->idPost ?>/delete">
+                                <input type="hidden" name="idPost" value="<?= htmlspecialchars($post->idPost) ?>">
+                                <input type="hidden" name="fromMod" value="1">
+                                <button class="btn btn-danger btn-sm" onclick="return confirm('Delete this post?')">
+                                    Delete
                                 </button>
                             </form>
                         </td>
