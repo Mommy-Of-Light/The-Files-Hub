@@ -55,6 +55,8 @@ composer install
 mysql -u <user> -p < sql/database.sql
 ```
 
+Ou copiez le script sql `sql/database.sql` dans votre server mariadb.
+
 ### Copier le fichier d’exemple :
 
 ```bash
