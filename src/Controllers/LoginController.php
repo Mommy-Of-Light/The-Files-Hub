@@ -111,6 +111,11 @@ class LoginController extends BaseController
 
         $profilePicturePath = null;
 
+        $uploadDir = __DIR__ . '/../../public/assets/pfp/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0777, true);
+        }
+
         if ($profilePicture && $profilePicture->getError() === UPLOAD_ERR_OK) {
             $mimeType = $profilePicture->getClientMediaType();
 
@@ -129,7 +134,7 @@ class LoginController extends BaseController
             $newFilename = sprintf('%s_pfp.%s', $username, $extension);
 
             $profilePicture->moveTo(
-                __DIR__ . '/../../public/assets/pfp/' . $newFilename
+                $uploadDir . $newFilename
             );
         }
         else {
