@@ -81,3 +81,11 @@ Aujourd'hui, ma tâche consistait à compléter la documentation du projet, car 
 ### Bastien:
 
 Aujourd'hui, j'ai fais les derniers bugs fix sur le site et je me suis occupé des commentaires du code
+
+## 12.03.2026
+
+Absence de la profésseure
+
+## 19.03.2026
+
+Présentation du projet devant la classe et les professeurs. Nous avons présenté notre projet, son fonctionnement, ainsi que les différentes étapes de sa réalisation. Nous avons également répondu aux questions posées par les professeurs et les étudiants présents.

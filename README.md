@@ -4,6 +4,12 @@ Notre projet a pour objectif de créer un site web où les utilisateurs pourront
 
 ---
 
+## Dépot du site
+
+Le site est disponible sur [https://github.com/Mommy-Of-Light/The-Files-Hub.git](https://github.com/Mommy-Of-Light/The-Files-Hub.git)
+
+---
+
 ## Fonctionnalités
 
 * API REST avec Slim Framework
@@ -76,18 +82,29 @@ define('DB_CHARSET', 'utf8mb4');
 Avec le serveur PHP intégré :
 
 ```bash
-php -S localhost:8000 -t public
+composer start
 ```
 
 Accéder à l’application :
 
-```
 http://localhost:8000
+
+Arrèter l'application:
+
+```bash
+composer stop
 ```
+
+Les messages: 
+
+- `Script php -S localhost:8080 -d display_errors=1 -d display_startup_errors=1 -t public handling the start event returned with error code 143`
+- `Script pkill -f 8080 handling the stop event returned with error code 143`
+
+ne sont pas importants et cela n'affecte pas le lancemant et l'arret du server.
 
 ---
 
-## Lancer l’application
+## Architecture
 
 ```
 The-Files-Hub/
