@@ -60,7 +60,7 @@ Ou copiez le script sql `sql/database.sql` dans votre server mariadb.
 ### Copier le fichier d’exemple :
 
 ```bash
-cp config/database.sample.php database.php
+cp config/database.sample.php config/database.php
 ```
 
 ### Modifier les variables selon votre configuration :
